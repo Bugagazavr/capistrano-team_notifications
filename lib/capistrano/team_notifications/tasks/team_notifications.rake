@@ -20,9 +20,12 @@ namespace :team_notifications do
 
   def nc_notify(message)
     team_notifications_token = fetch(:team_notifications_token)
+    team_notifications_host = fetch(:team_notifications_host) || 'space-notice.com'
+    team_notifications_port = fetch(:team_notofications_port) || 443
+    
     raise "Undefined capistrano-team_notifications token" if team_notifications_token.nil? || team_notifications_token.empty?
 
-    http = Net::HTTP.new("space-notice.com", 443)
+    http = Net::HTTP.new(team_notifications_host, team_notifications_port)
     http.use_ssl = true
     http.verify_mode = OpenSSL::SSL::VERIFY_NONE
     http.post("/p/#{team_notifications_token}", "message=#{message}")
